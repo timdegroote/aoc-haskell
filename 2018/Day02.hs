@@ -23,7 +23,7 @@ hasOccurrencyCount n xs =
 combineTuples :: (a -> a -> b) -> (a, a) -> (a, a) -> (b, b)
 combineTuples cmbn (a1, b1) (a2, b2) = (cmbn a1 a2, cmbn b1 b2)
 
-reduceTuple :: (a -> a -> b) -> (a, a) -> b
+reduceTuple :: (a -> b -> c) -> (a, b) -> c
 reduceTuple reducer (a, b) = reducer a b
 
 countTwoThrees :: [(Bool, Bool)] -> (Int, Int)
