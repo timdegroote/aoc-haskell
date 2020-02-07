@@ -20,7 +20,7 @@ hasOccurrencyCount :: (Eq a) => Int -> [a] -> Bool
 hasOccurrencyCount n xs =
   any ((== n) . (\el -> countOccurrencies el xs)) (unique xs)
 
-combineTuples :: (a -> a -> b) -> (a, a) -> (a, a) -> (b, b)
+combineTuples :: (a -> b -> c) -> (a, a) -> (b, b) -> (c, c)
 combineTuples cmbn (a1, b1) (a2, b2) = (cmbn a1 a2, cmbn b1 b2)
 
 reduceTuple :: (a -> b -> c) -> (a, b) -> c
