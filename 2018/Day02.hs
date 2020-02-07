@@ -2,7 +2,7 @@ import Util
 
 main = solve 2018 2 Solution { parse = lines
                              , part1 = reduceTuple (*) . countTwoThrees . map (\s -> (hasOccurrencyCount 2 s, hasOccurrencyCount 3 s))
-                             , part2 = head }
+                             , part2 = foldl1 getMatchingElements . findDiffsAtMost 1}
 
 countOccurrencies :: (Eq a) => a -> [a] -> Int
 countOccurrencies _ [] = 0
@@ -30,3 +30,27 @@ countTwoThrees :: [(Bool, Bool)] -> (Int, Int)
 countTwoThrees [] = (0, 0)
 countTwoThrees ((hasTwos, hasThrees):xs) =
   combineTuples (+) (fromEnum hasTwos, fromEnum hasThrees) (countTwoThrees xs)
+
+diffsAtMost :: (Eq a) => Int -> [a] -> [a] -> Bool
+diffsAtMost _ [] [] = True
+diffsAtMost maxDiff (x1:xs1) (x2:xs2)
+  | same = diffsAtMost maxDiff xs1 xs2
+  | maxDiff == 0 = False
+  | otherwise = diffsAtMost (pred maxDiff) xs1 xs2
+  where same = x1 == x2
+
+findDiffsAtMost :: (Eq a) => Int -> [[a]] -> [[a]]
+findDiffsAtMost _ [] = []
+findDiffsAtMost _ (x:[]) = [x]
+findDiffsAtMost maxDiff (x:xs)
+  | length found >= 1 = x : found
+  | otherwise = findDiffsAtMost maxDiff xs
+  where found = filter (diffsAtMost maxDiff x) xs
+
+getMatchingElements :: (Eq a) => [a] -> [a] -> [a]
+getMatchingElements _ [] = []
+getMatchingElements [] _ = []
+getMatchingElements (x:xs) (y:ys)
+  | same = x : getMatchingElements xs ys
+  | otherwise = getMatchingElements xs ys
+  where same = x == y
