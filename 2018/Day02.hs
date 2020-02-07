@@ -33,11 +33,10 @@ countTwoThrees ((hasTwos, hasThrees):xs) =
 
 diffsAtMost :: (Eq a) => Int -> [a] -> [a] -> Bool
 diffsAtMost _ [] [] = True
-diffsAtMost maxDiff (x1:xs1) (x2:xs2)
-  | same = diffsAtMost maxDiff xs1 xs2
+diffsAtMost maxDiff (x:xs) (y:ys)
+  | x == y = diffsAtMost maxDiff xs ys
   | maxDiff == 0 = False
-  | otherwise = diffsAtMost (pred maxDiff) xs1 xs2
-  where same = x1 == x2
+  | otherwise = diffsAtMost (pred maxDiff) xs ys
 
 findDiffsAtMost :: (Eq a) => Int -> [[a]] -> [[a]]
 findDiffsAtMost _ [] = []
@@ -51,6 +50,5 @@ getMatchingElements :: (Eq a) => [a] -> [a] -> [a]
 getMatchingElements _ [] = []
 getMatchingElements [] _ = []
 getMatchingElements (x:xs) (y:ys)
-  | same = x : getMatchingElements xs ys
+  | x == y = x : getMatchingElements xs ys
   | otherwise = getMatchingElements xs ys
-  where same = x == y
