@@ -2,7 +2,7 @@ import Util
 import Data.List
 
 main = solve 2018 2 Solution { parse = lines
-                             , part1 = reduceTuple (*) . countTwoThrees . map (\s -> (hasOccurrencyCount 2 s, hasOccurrencyCount 3 s))
+                             , part1 = reduceTuple (*) . countTwosThrees . map (\s -> (hasOccurrencyCount 2 s, hasOccurrencyCount 3 s))
                              , part2 = foldl1 getMatchingElements . findDiffsAtMost 1}
 
 countOccurrencies :: (Eq a) => a -> [a] -> Int
@@ -21,10 +21,10 @@ combineTuples cmbn (a1, b1) (a2, b2) = (cmbn a1 a2, cmbn b1 b2)
 reduceTuple :: (a -> b -> c) -> (a, b) -> c
 reduceTuple reducer (a, b) = reducer a b
 
-countTwoThrees :: [(Bool, Bool)] -> (Int, Int)
-countTwoThrees [] = (0, 0)
-countTwoThrees ((hasTwos, hasThrees):xs) =
-  combineTuples (+) (fromEnum hasTwos, fromEnum hasThrees) (countTwoThrees xs)
+countTwosThrees :: [(Bool, Bool)] -> (Int, Int)
+countTwosThrees [] = (0, 0)
+countTwosThrees ((hasTwos, hasThrees):xs) =
+  combineTuples (+) (fromEnum hasTwos, fromEnum hasThrees) (countTwosThrees xs)
 
 diffsAtMost :: (Eq a) => Int -> [a] -> [a] -> Bool
 diffsAtMost _ [] [] = True
