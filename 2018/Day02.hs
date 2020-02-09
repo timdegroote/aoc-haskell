@@ -1,4 +1,5 @@
 import Util
+import Data.List
 
 main = solve 2018 2 Solution { parse = lines
                              , part1 = reduceTuple (*) . countTwoThrees . map (\s -> (hasOccurrencyCount 2 s, hasOccurrencyCount 3 s))
@@ -10,15 +11,9 @@ countOccurrencies i (x:xs)
   | i == x = 1 + countOccurrencies i xs
   | otherwise = countOccurrencies i xs
 
-unique :: (Eq a) => [a] -> [a]
-unique [] = []
-unique (x:xs)
-  | x `elem` xs = unique xs
-  | otherwise = x:(unique xs)
-
 hasOccurrencyCount :: (Eq a) => Int -> [a] -> Bool
 hasOccurrencyCount n xs =
-  any ((== n) . (\el -> countOccurrencies el xs)) (unique xs)
+  any ((== n) . (\el -> countOccurrencies el xs)) (nub xs)
 
 combineTuples :: (a -> b -> c) -> (a, a) -> (b, b) -> (c, c)
 combineTuples cmbn (a1, b1) (a2, b2) = (cmbn a1 a2, cmbn b1 b2)
