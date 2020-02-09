@@ -1,8 +1,9 @@
 import Util
-import Data.List
+import Data.List (nub)
+import qualified Data.Map as M
 
 main = solve 2018 2 Solution { parse = lines
-                             , part1 = reduceTuple (*) . countTwosThrees . map (\s -> (hasOccurrencyCount 2 s, hasOccurrencyCount 3 s))
+                             , part1 = M.foldl (*) 1 . M.fromListWith (+) . concatMap (getOccurrencyCounts [2, 3])
                              , part2 = foldl1 getMatchingElements . findDiffsAtMost 1}
 
 countOccurrencies :: (Eq a) => a -> [a] -> Int
@@ -15,16 +16,9 @@ hasOccurrencyCount :: (Eq a) => Int -> [a] -> Bool
 hasOccurrencyCount n xs =
   any ((== n) . (\el -> countOccurrencies el xs)) (nub xs)
 
-combineTuples :: (a -> b -> c) -> (a, a) -> (b, b) -> (c, c)
-combineTuples cmbn (a1, b1) (a2, b2) = (cmbn a1 a2, cmbn b1 b2)
-
-reduceTuple :: (a -> b -> c) -> (a, b) -> c
-reduceTuple reducer (a, b) = reducer a b
-
-countTwosThrees :: [(Bool, Bool)] -> (Int, Int)
-countTwosThrees [] = (0, 0)
-countTwosThrees ((hasTwos, hasThrees):xs) =
-  combineTuples (+) (fromEnum hasTwos, fromEnum hasThrees) (countTwosThrees xs)
+getOccurrencyCounts :: Eq a => [Int] -> [a] -> [(Int, Int)]
+getOccurrencyCounts counts items =
+  map (\count -> (count, fromEnum $ hasOccurrencyCount count items)) counts
 
 diffsAtMost :: (Eq a) => Int -> [a] -> [a] -> Bool
 diffsAtMost _ [] [] = True
